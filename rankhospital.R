@@ -46,7 +46,7 @@ rankhospital <- function(state, outcome, rank) {
     return(NA)
   }
   
-  # In the end, I extract the data
+  # In the end, I extract the data and return it
   outcomeData[,2] <- as.numeric(outcomeData[,2])
   outcomeData <- outcomeData[order(outcomeData[,2]),]
   finalData <- outcomeData[outcomeData[,2] == outcomeData[rank,2],]
