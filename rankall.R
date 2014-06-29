@@ -28,29 +28,36 @@ rankall <- function(outcome, rank = "best") {
   # Then I convert rank to a numeric value
   if (toupper(rank) == "BEST") {
     rank <- 1
-  } else if (!is.numeric(rank)) {
+  }
+  else if (toupper(rank) == "WORST") {}
+  else if (!is.numeric(rank)) {
     return(NA)
   }
   
   splitData <- split(outcomeData,outcomeData[,3])
-  
+
   for(ki in seq_along(names(splitData))) {
     stateList <- names(splitData)
     currentState <- stateList[ki]
     stateData <- as.data.frame(splitData[currentState])
-    colnames(stateData) <- c("Hospital","Outcome","State")
-    stateData[,"Outcome"] <- as.numeric(stateData[,"Outcome"])
-    stateData <- stateData[order(stateData[,"Outcome"]),]
-    row.names(stateData) <- 1:nrow(stateData)
-    finalData <- stateData[stateData[,"Outcome"] == stateData[rank,"Outcome"],]
-    finalData <- finalData[order(finalData[,1]),]
-    result <- c(as.character(finalData[1,1]),as.character(finalData[1,3]))
-    if(exists("finalResult")) {
-      finalResult[ki,"Hospital"] <- result[1]
-      finalResult[ki,"State"] <- stateList[ki]
+    if (toupper(rank) == "WORST") {
+      rank <- nrow(stateData)
     }
-    else {
-      finalResult <- data.frame(Hospital = result[1], State = stateList[ki], stringsAsFactors=FALSE)
+    if(!is.null(nrow(stateData))) {
+      colnames(stateData) <- c("Hospital","Outcome","State")
+      stateData[,"Outcome"] <- as.numeric(stateData[,"Outcome"])
+      stateData <- stateData[order(stateData[,"Outcome"]),]
+      row.names(stateData) <- 1:nrow(stateData)
+      finalData <- stateData[stateData[,"Outcome"] == stateData[rank,"Outcome"],]
+      finalData <- finalData[order(finalData[,1]),]
+      result <- c(as.character(finalData[1,1]),as.character(finalData[1,3]))
+      if(exists("finalResult")) {
+        finalResult[ki,"hospital"] <- result[1]
+        finalResult[ki,"state"] <- stateList[ki]
+      }
+      else {
+        finalResult <- data.frame(hospital = result[1], state = stateList[ki], stringsAsFactors=FALSE)
+      }
     }   
   }
   row.names(finalResult) <- stateList
