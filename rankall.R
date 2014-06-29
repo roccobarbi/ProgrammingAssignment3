@@ -43,27 +43,15 @@ rankall <- function(outcome, rank = "best") {
     stateData <- stateData[order(stateData[,2]),]
     finalData <- stateData[stateData[,2] == stateData[rank,2],]
     finalData <- finalData[order(finalData[,1]),]
-    result <- finalData[1,c(1,3)]
-    return(result)
-    if(exists("nobsdf")) {
-      nobsdf[ki,] <- c(id[ki], nrow(currentstation[complete.cases(currentstation),]))
+    # result <- as.vector(finalData[1,c(1,3)])
+    result <- c(as.character(finalData[1,1]),as.character(finalData[1,3]))
+    if(exists("finalResult")) {
+      finalResult[ki,"Hospital"] <- result[1]
+      finalResult[ki,"State"] <- result[2]
     }
     else {
-      nobsdf <- data.frame(id = id[ki], nobs = nrow(currentstation[complete.cases(currentstation),]))
+      finalResult <- data.frame(Hospital = result[1], State = result[2], stringsAsFactors=FALSE)
     }   
   }
-  
-  # Function to extract and return my data
-  sortData <- function(outcomeData){
-    outcomeData[,2] <- as.numeric(outcomeData[,2])
-    outcomeData <- outcomeData[order(outcomeData[,2]),]
-    finalData <- outcomeData[outcomeData[,2] == outcomeData[rank,2],]
-    finalData <- finalData[order(finalData[,1]),]
-    finalData[1,1]
-  }
-  
-  # And now I tapply it and assign it to a data frame
-  
-  result <- tapply(outcomeData[,1:2],outcomeData[,3],sortData)
-  result
+  return(finalResult)
 }
