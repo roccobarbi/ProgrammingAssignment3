@@ -37,17 +37,19 @@ rankhospital <- function(state, outcome, rank) {
     rank <- 1
   } else if (toupper(rank) == "WORST") {
     rank <- nrow(outcomeData)
+  } else if (!is.numeric(rank)) {
+    return(NA)
   }
   
   # Then I need to check if the rank is valid, otherwise I return a NULL
   if (nrow(outcomeData) < rank) {
-    return(NULL)
+    return(NA)
   }
-  return(rank)
-  # I now convert all 
   
-  # finalData[,2] <- as.numeric(finalData[,2])
-  # finalData <- finalData[finalData[,2] == min(finalData[,2]),]
-  # finalData[order(finalData[,2]),]
-  # finalData[1,1]
+  # In the end, I extract the data
+  outcomeData[,2] <- as.numeric(outcomeData[,2])
+  outcomeData <- outcomeData[order(outcomeData[,2]),]
+  finalData <- outcomeData[outcomeData[,2] == outcomeData[rank,2],]
+  finalData <- finalData[order(finalData[,1]),]
+  finalData[1,1]
 }
