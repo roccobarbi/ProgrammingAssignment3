@@ -39,19 +39,20 @@ rankall <- function(outcome, rank = "best") {
     currentState <- stateList[ki]
     stateData <- as.data.frame(splitData[currentState])
     colnames(stateData) <- c("Hospital","Outcome","State")
-    stateData[,2] <- as.numeric(stateData[,2])
-    stateData <- stateData[order(stateData[,2]),]
-    finalData <- stateData[stateData[,2] == stateData[rank,2],]
+    stateData[,"Outcome"] <- as.numeric(stateData[,"Outcome"])
+    stateData <- stateData[order(stateData[,"Outcome"]),]
+    row.names(stateData) <- 1:nrow(stateData)
+    finalData <- stateData[stateData[,"Outcome"] == stateData[rank,"Outcome"],]
     finalData <- finalData[order(finalData[,1]),]
-    # result <- as.vector(finalData[1,c(1,3)])
     result <- c(as.character(finalData[1,1]),as.character(finalData[1,3]))
     if(exists("finalResult")) {
       finalResult[ki,"Hospital"] <- result[1]
-      finalResult[ki,"State"] <- result[2]
+      finalResult[ki,"State"] <- stateList[ki]
     }
     else {
-      finalResult <- data.frame(Hospital = result[1], State = result[2], stringsAsFactors=FALSE)
+      finalResult <- data.frame(Hospital = result[1], State = stateList[ki], stringsAsFactors=FALSE)
     }   
   }
+  row.names(finalResult) <- stateList
   return(finalResult)
 }
