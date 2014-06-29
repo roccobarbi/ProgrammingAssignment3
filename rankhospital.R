@@ -32,11 +32,19 @@ rankhospital <- function(state, outcome, rank) {
     stop("invalid outcome")
   }
   
-  # Then I need to count the number of lines for that particular state,
-  # if rank is higher, I return a NULL
+  # Then I convert rank to a numeric value
+  if (toupper(rank) == "BEST") {
+    rank <- 1
+  } else if (toupper(rank) == "WORST") {
+    rank <- nrow(outcomeData)
+  }
+  
+  # Then I need to check if the rank is valid, otherwise I return a NULL
   if (nrow(outcomeData) < rank) {
     return(NULL)
   }
+  return(rank)
+  # I now convert all 
   
   # finalData[,2] <- as.numeric(finalData[,2])
   # finalData <- finalData[finalData[,2] == min(finalData[,2]),]
